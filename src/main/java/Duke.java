@@ -1,98 +1,154 @@
 import java.util.Scanner;
 
 public class Duke {
+
     public static void main(String[] args) {
-        String greet =
-                "    ____________________________________________________________\n" +
-                "     Hello! I'm Duke\n" +
-                "     What can I do for you?\n" +
-                "    ____________________________________________________________\n";
-        String bye =
-                "    ____________________________________________________________\n" +
-                "     Bye. Hope to see you again soon!\n" +
-                "    ____________________________________________________________\n";
-        String divider =
-                "    ____________________________________________________________\n";
-        String[] items = new String[100];
         Task[] tasks = new Task[100];
+        int taskCount = 0;
 
-        int itemCount = 0;
-
-        System.out.println(greet);
-
+        showWelcomeMessage();
         while (true) {
-            Scanner in = new Scanner(System.in);
-            String line = in.nextLine();
-
-            if (line.equals("bye")) {
-                System.out.println(bye);
+            String userCommand = getUserInput();
+            if (userCommand.equals("bye")) {
+                showExitMessage();
                 break;
             }
-
-            else if (line.equals("list")) {
-                System.out.println(divider + "     Here are the tasks in your list:");
-                for (int i = 0; i < itemCount; i++) {
-                    System.out.println("     " + (i + 1) + "." + tasks[i].toString());
-                }
-                System.out.println(divider);
+            else if (userCommand.equals("list")) {
+                showList(tasks, taskCount);
             }
-
-            else if (line.startsWith("done ")) {
-                int lineSize = line.length();
-                int index = Integer.parseInt(line.substring(5, lineSize)) - 1;
-                tasks[index].markAsDone();
-                System.out.println(divider + "     Nice! I've marked this task as done:\n" +
-                        "       " + tasks[index].toString() + "\n" + divider);
+            else if (userCommand.startsWith("done")) {
+                setDone(tasks, userCommand);
             }
-
             else {
-                int lineSize = line.length();
-                System.out.println(divider + "     Got it. I've added this task:");
-
-                if (line.startsWith("todo ")) {
-                    for (String item : items) {
-                        items[itemCount] = line.substring(5, lineSize);
-                        tasks[itemCount] = new Todo(line.substring(5, lineSize));
-                    }
-                    System.out.println("       " + tasks[itemCount].toString());
-                    itemCount++;
+                int lineSize = userCommand.length();
+                showAddTaskMessage();
+                if (userCommand.startsWith("todo")) {
+                    taskCount = addTodo(tasks, taskCount, userCommand, lineSize);
                 }
-
-                else if (line.startsWith("deadline ")) {
-                    int dividerPosition = line.indexOf("/by ");
-                    String deadline = line.substring(9, dividerPosition - 1);
-                    String by = line.substring(dividerPosition + 4, lineSize);
-                    for (String item : items) {
-                        items[itemCount] = deadline;
-                        tasks[itemCount] = new Deadline(deadline, by);
-                    }
-                    System.out.println("       " + tasks[itemCount].toString());
-                    itemCount++;
+                else if (userCommand.startsWith("deadline")) {
+                    taskCount = addDeadline(tasks, taskCount, userCommand, lineSize);
                 }
-
-                else if (line.startsWith("event ")) {
-                    int dividerPosition = line.indexOf("/at ");
-                    String event = line.substring(6, dividerPosition - 1);
-                    String at = line.substring(dividerPosition + 4, lineSize);
-                    for (String item : items) {
-                        items[itemCount] = event;
-                        tasks[itemCount] = new Event(event, at);
-                    }
-                    System.out.println("       " + tasks[itemCount].toString());
-                    itemCount++;
+                else if (userCommand.startsWith("event")) {
+                    taskCount = addEvent(tasks, taskCount, userCommand, lineSize);
                 }
-
                 else {
-                    for (String item : items) {
-                        items[itemCount] = line;
-                        tasks[itemCount] = new Task(line);
-                    }
-                    System.out.println("       " + line);
-                    itemCount++;
+                    taskCount = addTask(tasks, taskCount, userCommand);
                 }
-
-                System.out.println("     Now you have " + itemCount + " tasks in the list.\n" + divider);
+                showTaskCountMessage(taskCount);
             }
         }
+    }
+
+    private static String getUserInput() {
+        Scanner input = new Scanner(System.in);
+        return input.nextLine();
+    }
+
+    private static int addTask(Task[] tasks, int taskCount, String userCommand) {
+        for (Task task : tasks) {
+            tasks[taskCount] = new Task(userCommand);
+        }
+        echoTask(tasks, taskCount);
+        taskCount++;
+        return taskCount;
+    }
+
+    private static int addTodo(Task[] tasks, int taskCount, String userCommand, int lineSize) {
+        String todoTask = getTask(userCommand);
+        for (Task task : tasks) {
+
+            tasks[taskCount] = new Todo(todoTask);
+        }
+        echoTask(tasks, taskCount);
+        taskCount++;
+        return taskCount;
+    }
+
+    private static int addDeadline(Task[] tasks, int taskCount, String userCommand, int lineSize) {
+        String deadlineTask = getTask(userCommand);
+        String deadlineBy = getDate(userCommand);
+        for (Task task : tasks) {
+            tasks[taskCount] = new Deadline(deadlineTask, deadlineBy);
+        }
+        echoTask(tasks, taskCount);
+        taskCount++;
+        return taskCount;
+    }
+
+    private static int addEvent(Task[] tasks, int taskCount, String userCommand, int lineSize) {
+        String eventTask = getTask(userCommand);
+        String eventAt = getDate(userCommand);
+        for (Task task : tasks) {
+            tasks[taskCount] = new Event(eventTask, eventAt);
+        }
+        echoTask(tasks, taskCount);
+        taskCount++;
+        return taskCount;
+    }
+
+    private static void setDone(Task[] tasks, String userCommand) {
+        int index = getDoneIndex(userCommand);
+        tasks[index].markAsDone();
+        showDoneMessage(tasks, index);
+    }
+
+    private static String getTask(String userCommand) {
+        if (userCommand.contains("/")) {
+            return userCommand.substring(userCommand.indexOf(" ") + 1, userCommand.indexOf("/") - 1);
+        }
+        else {
+            return userCommand.substring(userCommand.indexOf(" ") + 1);
+        }
+    }
+
+    private static String getDate(String userCommand) {
+        return userCommand.substring(userCommand.indexOf("/") + 4);
+    }
+
+    private static int getDoneIndex(String userCommand) {
+        return Integer.parseInt(userCommand.substring(userCommand.indexOf(" ") + 1)) - 1;
+    }
+
+    private static void showWelcomeMessage() {
+        System.out.println("    ____________________________________________________________");
+        System.out.println("     Hello! I'm Duke");
+        System.out.println("     What can I do for you?");
+        System.out.println("    ____________________________________________________________\n");
+    }
+
+    private static void showExitMessage() {
+        System.out.println("    ____________________________________________________________");
+        System.out.println("     Bye. Hope to see you again soon!");
+        System.out.println("    ____________________________________________________________\n");
+    }
+
+    private static void showList(Task[] tasks, int taskCount) {
+        System.out.println("    ____________________________________________________________");
+        System.out.println("     Here are the tasks in your list:");
+        for (int i = 0; i < taskCount; i++) {
+            System.out.println("     " + (i + 1) + "." + tasks[i].toString());
+        }
+        System.out.println("    ____________________________________________________________\n");
+    }
+
+    private static void showAddTaskMessage() {
+        System.out.println("    ____________________________________________________________");
+        System.out.println("     Got it. I've added this task:");
+    }
+
+    private static void showTaskCountMessage(int taskCount) {
+        System.out.println("     Now you have " + taskCount + " tasks in the list.");
+        System.out.println("    ____________________________________________________________\n");
+    }
+
+    private static void showDoneMessage(Task[] tasks, int index) {
+        System.out.println("    ____________________________________________________________");
+        System.out.println("     Nice! I've marked this task as done:");
+        System.out.println("       " + tasks[index].toString());
+        System.out.println("    ____________________________________________________________\n");
+    }
+
+    private static void echoTask(Task[] tasks, int taskCount) {
+        System.out.println("       " + tasks[taskCount].toString());
     }
 }
