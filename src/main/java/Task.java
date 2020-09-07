@@ -1,4 +1,6 @@
-public class Task {
+public abstract class Task {
+    public static final String BRACKET_OPEN = "[";
+    public static final String BRACKET_CLOSE = "] ";
     protected String description;
     protected boolean isDone;
 
@@ -16,6 +18,6 @@ public class Task {
     }
 
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return BRACKET_OPEN + getStatusIcon() + BRACKET_CLOSE + description;
     }
 }
