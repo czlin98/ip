@@ -1,3 +1,5 @@
+package duke.tasks;
+
 public class Event extends Task {
 
     public static final String ICON_EVENT = "[E]";

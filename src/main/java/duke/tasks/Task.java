@@ -1,3 +1,5 @@
+package duke.tasks;
+
 public abstract class Task {
     public static final String BRACKET_OPEN = "[";
     public static final String BRACKET_CLOSE = "] ";

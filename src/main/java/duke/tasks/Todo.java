@@ -1,3 +1,5 @@
+package duke.tasks;
+
 public class Todo extends Task {
 
     public static final String ICON_TODO = "[T]";
