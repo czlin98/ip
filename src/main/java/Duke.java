@@ -24,6 +24,11 @@ public class Duke {
     public static final String SPACE = " ";
     public static final String REGEX_DEADLINE = " /by ";
     public static final String REGEX_EVENT = " /at ";
+    public static final String MESSAGE_NULL_COMMAND_ARGS_A = "☹ OOPS!!! The description of a ";
+    public static final String NULL_COMMAND_ARGS_B = " cannot be empty.";
+    public static final String MESSAGE_NULL_DONE_INDEX_A = "☹ OOPS!!! The index of the task to be mark as done cannot";
+    public static final String MESSAGE_NULL_DONE_INDEX_B = "be empty.";
+    public static final String MESSAGE_INVALID_COMMAND = "☹ OOPS!!! I'm sorry, but I don't know what that means :-(";
     private static Task[] tasks;
     private static int taskCount;
     private static boolean isExit;
@@ -33,7 +38,12 @@ public class Duke {
         showWelcomeMessage();
         while (!isExit) {
             String userInput = getUserInput();
-            executeCommand(userInput);
+            try {
+                executeCommand(userInput);
+            }
+            catch (InvalidCommandException e) {
+                showInvalidCommandExceptionMesssage();
+            }
         }
     }
 
@@ -55,32 +65,42 @@ public class Duke {
         return input.nextLine();
     }
 
-    private static void executeCommand(String userInput) {
+    private static void executeCommand(String userInput) throws InvalidCommandException{
         String commandType = getCommandType(userInput);
         String commandArgs = getCommandArgs(userInput);
-        switch (commandType) {
-        case COMMAND_TODO:
-            taskCount = addTodo(tasks, taskCount, commandType, commandArgs);
-            break;
-        case COMMAND_DEADLINE:
-            taskCount = addDeadline(tasks, taskCount, commandType, commandArgs);
-            break;
-        case COMMAND_EVENT:
-            taskCount = addEvent(tasks, taskCount, commandType, commandArgs);
-            break;
-        case COMMAND_DONE:
-            markAsDone(tasks, commandArgs);
-            break;
-        case COMMAND_LIST:
-            showList(tasks, taskCount);
-            break;
-        case COMMAND_BYE:
-            exitProgram();
-            break;
-        default:
-            showCommandErrorMesssage();
-            break;
+        try {
+            switch (commandType) {
+            case COMMAND_TODO:
+                taskCount = addTodo(tasks, taskCount, commandType, commandArgs);
+                break;
+            case COMMAND_DEADLINE:
+                taskCount = addDeadline(tasks, taskCount, commandType, commandArgs);
+                break;
+            case COMMAND_EVENT:
+                taskCount = addEvent(tasks, taskCount, commandType, commandArgs);
+                break;
+            case COMMAND_DONE:
+                markAsDone(tasks, commandArgs);
+                break;
+            case COMMAND_LIST:
+                showList(tasks, taskCount);
+                break;
+            case COMMAND_BYE:
+                exitProgram();
+                break;
+            default:
+                throw new InvalidCommandException();
+            }
         }
+        catch (NullCommandArgsException e) {
+            showNullCommandArgsExceptionMessage(commandType);
+        }
+        catch (NullDoneIndexException e) {
+            showNullDoneIndexExceptionMessage();
+        }
+/*        catch (InvalidCommandException e) {
+            showInvalidCommandExceptionMesssage();
+        }*/
     }
 
     private static String getCommandType(String userInput) {
@@ -112,9 +132,9 @@ public class Duke {
         return split;
     }
 
-    private static int addTodo(Task[] tasks, int taskCount, String commandType, String commandArgs) {
+    private static int addTodo(Task[] tasks, int taskCount, String commandType, String commandArgs) throws NullCommandArgsException {
         if (commandArgs == null) {
-            showNullCommandArgsErrorMessage(commandType);
+            throw new NullCommandArgsException();
         }
         else {
             showAddTaskMessage();
@@ -129,9 +149,9 @@ public class Duke {
         return taskCount;
     }
 
-    private static int addDeadline(Task[] tasks, int taskCount, String commandType, String commandArgs) {
+    private static int addDeadline(Task[] tasks, int taskCount, String commandType, String commandArgs) throws NullCommandArgsException {
         if (commandArgs == null) {
-            showNullCommandArgsErrorMessage(commandType);
+            throw new NullCommandArgsException();
         }
         else{
             String[] deadlineDescriptionAndDate = splitDeadlineDescriptionAndDate(commandArgs);
@@ -148,9 +168,9 @@ public class Duke {
         return taskCount;
     }
 
-    private static int addEvent(Task[] tasks, int taskCount, String commandType, String commandArgs) {
+    private static int addEvent(Task[] tasks, int taskCount, String commandType, String commandArgs) throws NullCommandArgsException {
         if (commandArgs == null) {
-            showNullCommandArgsErrorMessage(commandType);
+            throw new NullCommandArgsException();
         }
         else {
             String[] eventDescriptionAndDate = splitEventDescriptionAndDate(commandArgs);
@@ -167,9 +187,9 @@ public class Duke {
         return taskCount;
     }
 
-    private static void showNullCommandArgsErrorMessage(String commandType) {
+    private static void showNullCommandArgsExceptionMessage(String commandType) {
         System.out.println(DIVIDER_TOP);
-        System.out.println(MESSAGE_PREFIX + "☹ OOPS!!! The description of a " + commandType + " cannot be empty.");
+        System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_COMMAND_ARGS_A + commandType + NULL_COMMAND_ARGS_B);
         System.out.println(DIVIDER_BOTTOM);
     }
 
@@ -197,9 +217,9 @@ public class Duke {
         System.out.println(DIVIDER_BOTTOM);
     }
 
-    private static void markAsDone(Task[] tasks, String commandArgs) {
+    private static void markAsDone(Task[] tasks, String commandArgs) throws NullDoneIndexException {
         if (commandArgs == null) {
-            showNullDoneIndexErrorMessage();
+            throw new NullDoneIndexException();
         }
         else {
             int index = getDoneIndex(commandArgs);
@@ -208,9 +228,10 @@ public class Duke {
         }
     }
 
-    private static void showNullDoneIndexErrorMessage() {
+    private static void showNullDoneIndexExceptionMessage() {
         System.out.println(DIVIDER_TOP);
-        System.out.println(MESSAGE_PREFIX + "☹ OOPS!!! The index of the task to be mark as done cannot be empty.");
+        System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_DONE_INDEX_A);
+        System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_DONE_INDEX_B);
         System.out.println(DIVIDER_BOTTOM);
     }
 
@@ -245,9 +266,9 @@ public class Duke {
         System.out.println(DIVIDER_BOTTOM);
     }
 
-    private static void showCommandErrorMesssage() {
+    private static void showInvalidCommandExceptionMesssage() {
         System.out.println(DIVIDER_TOP);
-        System.out.println(MESSAGE_PREFIX + "☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
+        System.out.println(MESSAGE_PREFIX + MESSAGE_INVALID_COMMAND);
         System.out.println(DIVIDER_BOTTOM);
     }
 }
