@@ -8,6 +8,7 @@ import duke.tasks.Task;
 import duke.tasks.Todo;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Duke {
 
@@ -43,8 +44,7 @@ public class Duke {
     public static final String MESSAGE_NULL_INDEX_DELETE_B = "empty.";
     public static final String MESSAGE_INVALID_COMMAND = "☹ OOPS!!! I'm sorry, but I don't know what that means :-(";
     public static final String MESSAGE_DELETE_TASK = "Noted. I've removed this task:";
-    private static Task[] tasks;
-    private static int taskCount;
+    private static ArrayList<Task> tasks;
     private static boolean isExit;
 
     public static void main(String[] args) {
@@ -62,8 +62,7 @@ public class Duke {
     }
 
     private static void initProgram() {
-        tasks = new Task[100];
-        taskCount = 0;
+        tasks = new ArrayList<>();
         isExit = false;
     }
 
@@ -85,22 +84,22 @@ public class Duke {
         try {
             switch (commandType) {
             case COMMAND_TODO:
-                taskCount = addTodo(tasks, taskCount, commandArgs);
+                addTodo(commandArgs);
                 break;
             case COMMAND_DEADLINE:
-                taskCount = addDeadline(tasks, taskCount, commandArgs);
+                addDeadline(commandArgs);
                 break;
             case COMMAND_EVENT:
-                taskCount = addEvent(tasks, taskCount, commandArgs);
+                addEvent(commandArgs);
                 break;
             case COMMAND_DONE:
-                markTaskAsDone(tasks, commandArgs);
+                markTaskAsDone(commandArgs);
                 break;
             case COMMAND_LIST:
-                showList(tasks, taskCount);
+                showList();
                 break;
             case COMMAND_DELETE:
-                deleteTask(tasks, commandArgs);
+                deleteTask(commandArgs);
                 break;
             case COMMAND_BYE:
                 exitProgram();
@@ -143,24 +142,20 @@ public class Duke {
         return split;
     }
 
-    private static int addTodo(Task[] tasks, int taskCount, String commandArgs) throws NullCommandArgsException {
+    private static void addTodo(String commandArgs) throws NullCommandArgsException {
         if (commandArgs == null) {
             throw new NullCommandArgsException();
         }
         else {
             showAddTaskMessage();
-            String todoTask = commandArgs;
-            for (Task task : tasks) {
-                tasks[taskCount] = new Todo(todoTask);
-            }
-            echoTask(tasks, taskCount);
-            taskCount++;
-            showTaskCountMessage(taskCount);
+            Todo todoTask = new Todo(commandArgs);
+            tasks.add(todoTask);
+            echoTask(todoTask);
+            showTaskCountMessage();
         }
-        return taskCount;
     }
 
-    private static int addDeadline(Task[] tasks, int taskCount, String commandArgs) throws NullCommandArgsException {
+    private static void addDeadline(String commandArgs) throws NullCommandArgsException {
         if (commandArgs == null) {
             throw new NullCommandArgsException();
         }
@@ -168,18 +163,15 @@ public class Duke {
             String[] deadlineDescriptionAndDate = splitDeadlineDescriptionAndDate(commandArgs);
             String deadlineDescription = deadlineDescriptionAndDate[0];
             String deadlineDate = deadlineDescriptionAndDate[1];
+            Deadline deadlineTask = new Deadline(deadlineDescription, deadlineDate);
             showAddTaskMessage();
-            for (Task task : tasks) {
-                tasks[taskCount] = new Deadline(deadlineDescription, deadlineDate);
-            }
-            echoTask(tasks, taskCount);
-            taskCount++;
-            showTaskCountMessage(taskCount);
+            tasks.add(deadlineTask);
+            echoTask(deadlineTask);
+            showTaskCountMessage();
         }
-        return taskCount;
     }
 
-    private static int addEvent(Task[] tasks, int taskCount, String commandArgs) throws NullCommandArgsException {
+    private static void addEvent(String commandArgs) throws NullCommandArgsException {
         if (commandArgs == null) {
             throw new NullCommandArgsException();
         }
@@ -187,15 +179,12 @@ public class Duke {
             String[] eventDescriptionAndDate = splitEventDescriptionAndDate(commandArgs);
             String eventDescription = eventDescriptionAndDate[0];
             String eventDate = eventDescriptionAndDate[1];
+            Event eventTask = new Event(eventDescription, eventDate);
             showAddTaskMessage();
-            for (Task task : tasks) {
-                tasks[taskCount] = new Event(eventDescription, eventDate);
-            }
-            echoTask(tasks, taskCount);
-            taskCount++;
-            showTaskCountMessage(taskCount);
+            tasks.add(eventTask);
+            echoTask(eventTask);
+            showTaskCountMessage();
         }
-        return taskCount;
     }
 
     private static void showNullCommandArgsExceptionMessage(String commandType) {
@@ -233,23 +222,24 @@ public class Duke {
         System.out.println(MESSAGE_PREFIX + MESSAGE_ADD_TASK);
     }
 
-    private static void echoTask(Task[] tasks, int taskCount) {
-        System.out.println(TASK_PREFIX + tasks[taskCount].toString());
+    private static void echoTask(Task task) {
+        System.out.println(TASK_PREFIX + task.toString());
     }
 
-    private static void showTaskCountMessage(int taskCount) {
-        System.out.println(MESSAGE_PREFIX + MESSAGE_TASK_COUNT_A + taskCount + MESSAGE_TASK_COUNT_B);
+    private static void showTaskCountMessage() {
+        System.out.println(MESSAGE_PREFIX + MESSAGE_TASK_COUNT_A + tasks.size() + MESSAGE_TASK_COUNT_B);
         System.out.println(DIVIDER_BOTTOM);
     }
 
-    private static void markTaskAsDone(Task[] tasks, String commandArgs) throws NullCommandArgsException {
+    private static void markTaskAsDone(String commandArgs) throws NullCommandArgsException {
         if (commandArgs == null) {
             throw new NullCommandArgsException();
         }
         else {
             int index = getDoneIndex(commandArgs);
-            tasks[index].markAsDone();
-            showDoneMessage(tasks, index);
+            Task task = tasks.get(index);
+            task.markAsDone();
+            showDoneMessage(task);
         }
     }
 
@@ -257,46 +247,43 @@ public class Duke {
         return Integer.parseInt(commandArgs) - 1;
     }
 
-    private static void showDoneMessage(Task[] tasks, int index) {
+    private static void showDoneMessage(Task task) {
         System.out.println(DIVIDER_TOP);
         System.out.println(MESSAGE_PREFIX + MESSAGE_DONE);
-        System.out.println(TASK_PREFIX + tasks[index].toString());
+        System.out.println(TASK_PREFIX + task.toString());
         System.out.println(DIVIDER_BOTTOM);
     }
 
-    private static void showList(Task[] tasks, int taskCount) {
+    private static void showList() {
         System.out.println(DIVIDER_TOP);
-        if (taskCount == 0) {
+        if (tasks.size() == 0) {
             System.out.println(MESSAGE_PREFIX + MESSAGE_LIST_NO_TASKS);
         }
         else {
             System.out.println(MESSAGE_PREFIX + MESSAGE_LIST);
-            for (int i = 0; i < taskCount; i++) {
-                System.out.println(MESSAGE_PREFIX + (i + 1) + PERIOD + tasks[i].toString());
+            for (Task task : tasks) {
+                System.out.println(MESSAGE_PREFIX + (tasks.indexOf(task)+1) + PERIOD + task.toString());
             }
         }
         System.out.println(DIVIDER_BOTTOM);
     }
 
-    private static void deleteTask(Task[] tasks, String commandArgs) throws NullCommandArgsException {
+    private static void deleteTask(String commandArgs) throws NullCommandArgsException {
         if (commandArgs == null) {
             throw new NullCommandArgsException();
         }
         else {
             int index = getDoneIndex(commandArgs);
-            showDeleteTaskMessage(tasks, index);
-            for (int i = index; i < taskCount; i++) {
-                tasks[i] = tasks[i+1];
-            }
-            taskCount--;
-            showTaskCountMessage(taskCount);
+            showDeleteTaskMessage(index);
+            tasks.remove(index);
+            showTaskCountMessage();
         }
     }
 
-    private static void showDeleteTaskMessage(Task[] tasks, int index) {
+    private static void showDeleteTaskMessage(int index) {
         System.out.println(DIVIDER_TOP);
         System.out.println(MESSAGE_PREFIX + MESSAGE_DELETE_TASK);
-        System.out.println(TASK_PREFIX + tasks[index].toString());
+        System.out.println(TASK_PREFIX + tasks.get(index).toString());
     }
 
     private static void exitProgram() {
@@ -316,4 +303,3 @@ public class Duke {
         System.out.println(DIVIDER_BOTTOM);
     }
 }
-
