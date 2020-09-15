@@ -7,8 +7,12 @@ import duke.tasks.Event;
 import duke.tasks.Task;
 import duke.tasks.Todo;
 
-import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Duke {
 
@@ -34,8 +38,8 @@ public class Duke {
     public static final String MESSAGE_DONE = "Nice! I've marked this task as done:";
     public static final String PERIOD = ".";
     public static final String SPACE = " ";
-    public static final String REGEX_DEADLINE = " /by ";
-    public static final String REGEX_EVENT = " /at ";
+    public static final String DELIMITER_DEADLINE = " /by ";
+    public static final String DELIMITER_EVENT = " /at ";
     public static final String MESSAGE_NULL_COMMAND_ARGS_A = "☹ OOPS!!! The description of a ";
     public static final String NULL_COMMAND_ARGS_B = " cannot be empty.";
     public static final String MESSAGE_NULL_INDEX_DONE_A = "☹ OOPS!!! The index of the task to be marked as done";
@@ -44,12 +48,17 @@ public class Duke {
     public static final String MESSAGE_NULL_INDEX_DELETE_B = "empty.";
     public static final String MESSAGE_INVALID_COMMAND = "☹ OOPS!!! I'm sorry, but I don't know what that means :-(";
     public static final String MESSAGE_DELETE_TASK = "Noted. I've removed this task:";
+    public static final String FILE_PATH = "data/duke.txt";
+    public static final String LETTER_TODO = "T";
+    public static final String LETTER_DEADLINE = "D";
+    public static final String LETTER_EVENT = "E";
+    public static final String MESSAGE_SOMETHING_WENT_WRONG = "Something went wrong: ";
     private static ArrayList<Task> tasks;
     private static boolean isExit;
 
     public static void main(String[] args) {
-        initProgram();
         showWelcomeMessage();
+        initProgram();
         while (!isExit) {
             String userInput = getUserInput();
             try {
@@ -64,6 +73,47 @@ public class Duke {
     private static void initProgram() {
         tasks = new ArrayList<>();
         isExit = false;
+        readTasks();
+    }
+
+    private static void readTasks() {
+        File f = new File(FILE_PATH);
+        try {
+            if (f.exists()) {
+                readFromFile();
+            } else {
+                f.createNewFile();
+            }
+        }
+        catch (IOException e) {
+            System.out.println(MESSAGE_SOMETHING_WENT_WRONG + e.getMessage());
+            isExit = true;
+        }
+    }
+
+    private static void readFromFile() throws FileNotFoundException {
+        File f = new File(FILE_PATH);
+        Scanner s = new Scanner(f);
+        while (s.hasNext()) {
+            String taskLine = s.nextLine();
+            String[] taskTypeAndParams = taskLine.split(" \\| ");
+            switch (taskTypeAndParams[0]) {
+            case LETTER_TODO:
+                tasks.add(new Todo(taskTypeAndParams[2]));
+                break;
+            case LETTER_DEADLINE:
+                tasks.add(new Deadline(taskTypeAndParams[2], taskTypeAndParams[3]));
+                break;
+            case LETTER_EVENT:
+                tasks.add(new Event(taskTypeAndParams[2], taskTypeAndParams[3]));
+                break;
+            default:
+                throw new FileNotFoundException();
+            }
+            if (taskTypeAndParams[1].equals("1")) {
+                tasks.get(tasks.size() - 1).markAsDone();
+            }
+        }
     }
 
     private static void showWelcomeMessage() {
@@ -102,6 +152,7 @@ public class Duke {
                 deleteTask(commandArgs);
                 break;
             case COMMAND_BYE:
+                saveTasks();
                 exitProgram();
                 break;
             default:
@@ -208,12 +259,12 @@ public class Duke {
     }
 
     private static String[] splitDeadlineDescriptionAndDate(String commandArgs) {
-        String[] split = commandArgs.split(REGEX_DEADLINE, 2);
+        String[] split = commandArgs.split(DELIMITER_DEADLINE, 2);
         return split;
     }
 
     private static String[] splitEventDescriptionAndDate(String commandArgs) {
-        String[] split = commandArgs.split(REGEX_EVENT, 2);
+        String[] split = commandArgs.split(DELIMITER_EVENT, 2);
         return split;
     }
 
@@ -286,6 +337,23 @@ public class Duke {
         System.out.println(TASK_PREFIX + tasks.get(index).toString());
     }
 
+    private static void saveTasks() {
+        String file = FILE_PATH;
+        try {
+            writeToFile(file);
+        } catch (IOException e) {
+            System.out.println(MESSAGE_SOMETHING_WENT_WRONG + e.getMessage());
+        }
+    }
+
+    private static void writeToFile(String filePath) throws IOException {
+        FileWriter fw = new FileWriter(filePath);
+        for (Task task : tasks) {
+            fw.write(task.toSave() + System.lineSeparator());
+        }
+        fw.close();
+    }
+
     private static void exitProgram() {
         isExit = true;
         showExitMessage();
@@ -303,3 +371,4 @@ public class Duke {
         System.out.println(DIVIDER_BOTTOM);
     }
 }
+
