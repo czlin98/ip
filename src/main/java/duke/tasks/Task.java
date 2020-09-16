@@ -1,6 +1,8 @@
 package duke.tasks;
 
 public abstract class Task {
+    public static final String YES = "Y";
+    public static final String NO = "N";
     public static final String BRACKET_OPEN = "[";
     public static final String BRACKET_CLOSE = "] ";
     public static final String TRUE = "1";
@@ -15,7 +17,7 @@ public abstract class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "\u2713" : "\u2718");
+        return (isDone ? YES : NO);
     }
 
     public void markAsDone() {
