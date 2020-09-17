@@ -8,8 +8,8 @@ public abstract class Task {
     public static final String TRUE = "1";
     public static final String FALSE = "0";
     public static final String DELIMITER = " | ";
-    private String description;
-    private boolean isDone;
+    protected String description;
+    protected boolean isDone;
 
     public Task(String description) {
         this.description = description;
