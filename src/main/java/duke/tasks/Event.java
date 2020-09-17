@@ -7,7 +7,7 @@ public class Event extends Task {
     public static final String DATE_POSTFIX = ")";
     public static final String LETTER_EVENT = "E";
     public static final String DELIMITER = " | ";
-    protected String at;
+    private String at;
 
     public Event(String description, String at) {
         super(description);

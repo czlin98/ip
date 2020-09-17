@@ -77,12 +77,12 @@ public class Duke {
     }
 
     private static void readTasks() {
-        File f = new File(FILE_PATH);
+        File file = new File(FILE_PATH);
         try {
-            if (f.exists()) {
+            if (file.exists()) {
                 readFromFile();
             } else {
-                f.createNewFile();
+                file.createNewFile();
             }
         }
         catch (IOException e) {
@@ -92,25 +92,32 @@ public class Duke {
     }
 
     private static void readFromFile() throws FileNotFoundException {
-        File f = new File(FILE_PATH);
-        Scanner s = new Scanner(f);
-        while (s.hasNext()) {
-            String taskLine = s.nextLine();
+        File file = new File(FILE_PATH);
+        Scanner scanner = new Scanner(file);
+        while (scanner.hasNext()) {
+            String taskLine = scanner.nextLine();
             String[] taskTypeAndParams = taskLine.split(" \\| ");
-            switch (taskTypeAndParams[0]) {
+            String taskType = taskTypeAndParams[0];
+            String taskDoneStatus = taskTypeAndParams[1];
+            String taskDescription = taskTypeAndParams[2];
+
+            switch (taskType) {
             case LETTER_TODO:
-                tasks.add(new Todo(taskTypeAndParams[2]));
+                tasks.add(new Todo(taskDescription));
                 break;
             case LETTER_DEADLINE:
-                tasks.add(new Deadline(taskTypeAndParams[2], taskTypeAndParams[3]));
+                String deadlineDate = taskTypeAndParams[3];
+                tasks.add(new Deadline(taskDescription, deadlineDate));
                 break;
             case LETTER_EVENT:
-                tasks.add(new Event(taskTypeAndParams[2], taskTypeAndParams[3]));
+                String eventDate = taskTypeAndParams[3];
+                tasks.add(new Event(taskDescription, eventDate));
                 break;
             default:
                 throw new FileNotFoundException();
             }
-            if (taskTypeAndParams[1].equals("1")) {
+
+            if (taskDoneStatus.equals("1")) {
                 tasks.get(tasks.size() - 1).markAsDone();
             }
         }
@@ -347,11 +354,11 @@ public class Duke {
     }
 
     private static void writeToFile(String filePath) throws IOException {
-        FileWriter fw = new FileWriter(filePath);
+        FileWriter filewriter = new FileWriter(filePath);
         for (Task task : tasks) {
-            fw.write(task.toSave() + System.lineSeparator());
+            filewriter.write(task.toSave() + System.lineSeparator());
         }
-        fw.close();
+        filewriter.close();
     }
 
     private static void exitProgram() {

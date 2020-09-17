@@ -7,7 +7,7 @@ public class Deadline extends Task {
     public static final String DATE_POSTFIX = ")";
     public static final String LETTER_DEADLINE = "D";
     public static final String DELIMITER = " | ";
-    protected String by;
+    private String by;
 
     public Deadline(String description, String by) {
         super(description);
