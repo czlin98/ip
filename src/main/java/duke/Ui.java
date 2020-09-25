@@ -1,8 +1,12 @@
 package duke;
 
+import duke.exceptions.NullStringException;
 import duke.tasks.Task;
 
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import static java.util.stream.Collectors.toList;
 
 public class Ui {
 
@@ -36,6 +40,9 @@ public class Ui {
     public static final String MESSAGE_INVALID_DATE_ARGS_B = " is not valid.";
     public static final String MESSAGE_INVALID_DATE_INPUT = "☹ OOPS!!! The format of the date entered is not valid";
     public static final String MESSAGE_INVALID_FILE_FORMAT = "☹ OOPS!!! The format of the file to be read is not valid.";
+    public static final String MESSAGE_FILTERED_LIST = "Here are the matching tasks in your list:";
+    public static final String MESSAGE_NULL_STRING_A = "☹ OOPS!!! The keyword you want to search for cannot be";
+    public static final String MESSAGE_NULL_STRING_B = "empty.";
 
     public String getUserInput() {
         Scanner in = new Scanner(System.in);
@@ -105,16 +112,15 @@ public class Ui {
         System.out.println(DIVIDER_BOTTOM);
     }
 
-    public void showList(TaskList tasks) {
+    public void showTaskList(ArrayList<Task> tasks) {
         System.out.println(DIVIDER_TOP);
-        if (tasks.getTaskList().size() == 0) {
+        if (tasks.size() == 0) {
             System.out.println(MESSAGE_PREFIX + MESSAGE_LIST_NO_TASKS);
         }
         else {
             System.out.println(MESSAGE_PREFIX + MESSAGE_LIST);
-            for (Task task : tasks.getTaskList()) {
-                System.out.println(MESSAGE_PREFIX + (tasks.getTaskList().indexOf(task)+1)  + PERIOD + task.toString());
-            }
+            tasks.stream()
+                    .forEach((t) -> System.out.println(MESSAGE_PREFIX + (tasks.indexOf(t) + 1) + PERIOD + t.toString()));
         }
         System.out.println(DIVIDER_BOTTOM);
     }
@@ -137,5 +143,27 @@ public class Ui {
         System.out.println(DIVIDER_TOP);
         System.out.println(MESSAGE_PREFIX + MESSAGE_FILE_NOT_FOUND);
         System.out.println(MESSAGE_PREFIX + MESSAGE_NEW_FILE_CREATED);
+    }
+
+    public void showFilteredTaskList(ArrayList<Task> tasks, String filterString) throws NullStringException {
+        if (filterString == null || filterString.trim().length() == 0) {
+            throw new NullStringException();
+        }
+        System.out.println(DIVIDER_TOP);
+        System.out.println(MESSAGE_PREFIX + MESSAGE_FILTERED_LIST);
+        ArrayList<Task> filteredTaskList = (ArrayList<Task>) tasks.stream()
+                .filter((s) -> s.getDescription().contains(filterString))
+                .collect(toList());
+        for (Task t : filteredTaskList) {
+            System.out.println(MESSAGE_PREFIX + (filteredTaskList.indexOf(t) + 1) + PERIOD + t.toString());
+        }
+        System.out.println(DIVIDER_BOTTOM);
+    }
+
+    public void showNullStringExceptionMessage() {
+        System.out.println(DIVIDER_TOP);
+        System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_STRING_A);
+        System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_STRING_B);
+        System.out.println(DIVIDER_BOTTOM);
     }
 }
