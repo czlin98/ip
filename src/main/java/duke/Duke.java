@@ -1,9 +1,6 @@
 package duke;
 
-import duke.exceptions.InvalidCommandException;
-import duke.exceptions.InvalidDateArgsException;
-import duke.exceptions.NullDescriptionException;
-import duke.exceptions.NullIndexException;
+import duke.exceptions.*;
 import duke.tasks.Task;
 
 import java.io.FileNotFoundException;
@@ -17,6 +14,7 @@ public class Duke {
     public static final String COMMAND_DONE = "done";
     public static final String COMMAND_LIST = "list";
     public static final String COMMAND_DELETE = "delete";
+    public static final String COMMAND_FIND = "find";
     public static final String COMMAND_BYE = "bye";
     public static final String FILE_PATH = "data/duke.txt";
     private Ui ui;
@@ -70,12 +68,15 @@ public class Duke {
                     storage.writeToFile(tasks);
                     break;
                 case COMMAND_LIST:
-                    ui.showList(tasks);
+                    ui.showTaskList(tasks.getTaskList());
                     break;
                 case COMMAND_DELETE:
                     Task taskToBeDeleted = tasks.deleteTask(parse.getIndex(commandArgs));
                     ui.showTaskDeletedMessage(tasks, taskToBeDeleted);
                     storage.writeToFile(tasks);
+                    break;
+                case COMMAND_FIND:
+                    ui.showFilteredTaskList(tasks.getTaskList(), commandArgs);
                     break;
                 case COMMAND_BYE:
                     isExit = true;
@@ -93,6 +94,8 @@ public class Duke {
                 ui.showNullDescriptionExceptionMessage(commandType);
             } catch (NullIndexException e) {
                 ui.showNullIndexExceptionMessage(commandType);
+            } catch (NullStringException e)  {
+                ui.showNullStringExceptionMessage();
             } catch (DateTimeParseException e) {
                 ui.showInvalidDateInputExceptionMessage();
             }
