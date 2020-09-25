@@ -1,20 +1,23 @@
 package duke;
 
-import duke.exceptions.InvalidDateFormatException;
+import duke.exceptions.InvalidDateArgsException;
 import duke.exceptions.NullDescriptionException;
 import duke.exceptions.NullIndexException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Parser {
 
-    public static final String DELIMITER_COMMAND = " ";
-    public static final String DELIMITER_DEADLINE = "/by";
-    public static final String DELIMITER_EVENT = "/at";
+    public static final String COMMAND_WORD_DELIMITER = " ";
+    public static final String DEADLINE_DELIMITER = "/by";
+    public static final String EVENT_DELIMITER = "/at";
 
     public String getCommandType(String userInput) {
         String[] commandTypeAndParams;
         String commandType;
-        if (userInput.contains(DELIMITER_COMMAND)) {
-            commandTypeAndParams = userInput.split(DELIMITER_COMMAND, 2);
+        if (userInput.contains(COMMAND_WORD_DELIMITER)) {
+            commandTypeAndParams = userInput.split(COMMAND_WORD_DELIMITER, 2);
             commandType = commandTypeAndParams[0];
         }
         else {
@@ -26,8 +29,8 @@ public class Parser {
     public String getCommandArgs(String userInput) {
         String[] commandTypeAndParams;
         String commandArgs;
-        if (userInput.contains(DELIMITER_COMMAND)) {
-            commandTypeAndParams = userInput.split(DELIMITER_COMMAND, 2);
+        if (userInput.contains(COMMAND_WORD_DELIMITER)) {
+            commandTypeAndParams = userInput.split(COMMAND_WORD_DELIMITER, 2);
             commandArgs = commandTypeAndParams[1];
         }
         else {
@@ -42,12 +45,12 @@ public class Parser {
         if (commandArgs == null || commandArgs.trim().length() == 0) {
             throw new NullDescriptionException();
         }
-        if (commandArgs.contains(DELIMITER_DEADLINE)) {
-            descriptionAndDate = commandArgs.split(DELIMITER_DEADLINE, 2);
+        if (commandArgs.contains(DEADLINE_DELIMITER)) {
+            descriptionAndDate = commandArgs.split(DEADLINE_DELIMITER, 2);
             description = descriptionAndDate[0].trim();
         }
-        else if (commandArgs.contains(DELIMITER_EVENT)) {
-            descriptionAndDate = commandArgs.split(DELIMITER_EVENT, 2);
+        else if (commandArgs.contains(EVENT_DELIMITER)) {
+            descriptionAndDate = commandArgs.split(EVENT_DELIMITER, 2);
             description = descriptionAndDate[1].trim();
         }
         else {
@@ -56,20 +59,21 @@ public class Parser {
         return description;
     }
 
-    public String getDate(String commandArgs) throws InvalidDateFormatException {
+    public LocalDate getDate(String commandArgs) throws InvalidDateArgsException {
         String[] descriptionAndDate;
         String date = null;
-        if (!(commandArgs.contains(DELIMITER_DEADLINE) && commandArgs.contains(DELIMITER_EVENT))) {
-            throw new InvalidDateFormatException();
+        if (!(commandArgs.contains(DEADLINE_DELIMITER) || commandArgs.contains(EVENT_DELIMITER))) {
+            throw new InvalidDateArgsException();
         }
-        if (commandArgs.contains(DELIMITER_DEADLINE)) {
-            descriptionAndDate = commandArgs.split(DELIMITER_DEADLINE, 2);
-            date = descriptionAndDate[1].trim();
-        } else if (commandArgs.contains(DELIMITER_EVENT)) {
-            descriptionAndDate = commandArgs.split(DELIMITER_EVENT, 2);
+        if (commandArgs.contains(DEADLINE_DELIMITER)) {
+            descriptionAndDate = commandArgs.split(DEADLINE_DELIMITER, 2);
             date = descriptionAndDate[1].trim();
         }
-        return date;
+        else if (commandArgs.contains(EVENT_DELIMITER)) {
+            descriptionAndDate = commandArgs.split(EVENT_DELIMITER, 2);
+            date = descriptionAndDate[1].trim();
+        }
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern("d/MM/yyyy"));
     }
 
     public int getIndex(String commandArgs) throws NullIndexException {

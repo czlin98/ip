@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,6 +21,8 @@ public class Storage {
     public static final String LETTER_DEADLINE = "D";
     public static final String LETTER_EVENT = "E";
     public static final String MESSAGE_SOMETHING_WENT_WRONG = "Something went wrong: ";
+    public static final String FILE_DELIMITER = " \\| ";
+    public static final String OUTPUT_FORMAT = "MMM d yyyy";
 
     private final String filePath;
 
@@ -25,14 +30,14 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    public ArrayList<Task> readFromFile() throws FileNotFoundException {
+    public ArrayList<Task> readFromFile() throws FileNotFoundException, DateTimeParseException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
         Scanner scanner = new Scanner(file);
         if (file.exists()) {
             while (scanner.hasNext()) {
                 String taskLine = scanner.nextLine();
-                String[] taskTypeAndParams = taskLine.split(" \\| ");
+                String[] taskTypeAndParams = taskLine.split(FILE_DELIMITER);
                 String taskType = taskTypeAndParams[0];
                 String taskDoneStatus = taskTypeAndParams[1];
                 String taskDescription = taskTypeAndParams[2];
@@ -43,11 +48,11 @@ public class Storage {
                     break;
                 case LETTER_DEADLINE:
                     String deadlineDate = taskTypeAndParams[3];
-                    tasks.add(new Deadline(taskDescription, deadlineDate));
+                    tasks.add(new Deadline(taskDescription, LocalDate.parse(deadlineDate, DateTimeFormatter.ofPattern(OUTPUT_FORMAT))));
                     break;
                 case LETTER_EVENT:
                     String eventDate = taskTypeAndParams[3];
-                    tasks.add(new Event(taskDescription, eventDate));
+                    tasks.add(new Event(taskDescription, LocalDate.parse(eventDate, DateTimeFormatter.ofPattern(OUTPUT_FORMAT))));
                     break;
                 default:
                     throw new FileNotFoundException();
