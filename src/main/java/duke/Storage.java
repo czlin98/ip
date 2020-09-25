@@ -1,0 +1,82 @@
+package duke;
+
+import duke.tasks.Deadline;
+import duke.tasks.Event;
+import duke.tasks.Task;
+import duke.tasks.Todo;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Storage {
+
+    public static final String LETTER_TODO = "T";
+    public static final String LETTER_DEADLINE = "D";
+    public static final String LETTER_EVENT = "E";
+    public static final String MESSAGE_SOMETHING_WENT_WRONG = "Something went wrong: ";
+
+    private final String filePath;
+
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public ArrayList<Task> readFromFile() throws FileNotFoundException {
+        ArrayList<Task> tasks = new ArrayList<>();
+        File file = new File(filePath);
+        Scanner scanner = new Scanner(file);
+        if (file.exists()) {
+            while (scanner.hasNext()) {
+                String taskLine = scanner.nextLine();
+                String[] taskTypeAndParams = taskLine.split(" \\| ");
+                String taskType = taskTypeAndParams[0];
+                String taskDoneStatus = taskTypeAndParams[1];
+                String taskDescription = taskTypeAndParams[2];
+
+                switch (taskType) {
+                case LETTER_TODO:
+                    tasks.add(new Todo(taskDescription));
+                    break;
+                case LETTER_DEADLINE:
+                    String deadlineDate = taskTypeAndParams[3];
+                    tasks.add(new Deadline(taskDescription, deadlineDate));
+                    break;
+                case LETTER_EVENT:
+                    String eventDate = taskTypeAndParams[3];
+                    tasks.add(new Event(taskDescription, eventDate));
+                    break;
+                default:
+                    throw new FileNotFoundException();
+                }
+
+                if (taskDoneStatus.equals("1")) {
+                    tasks.get(tasks.size() - 1).markAsDone();
+                }
+            }
+        }
+        else {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return tasks;
+    }
+
+    public void writeToFile(TaskList tasks) {
+        try {
+            FileWriter filewriter = new FileWriter(filePath);
+            for (Task task : tasks.getTaskList()) {
+                filewriter.write(task.toSave() + System.lineSeparator());
+            }
+            filewriter.close();
+        } catch (IOException e) {
+            System.out.println(MESSAGE_SOMETHING_WENT_WRONG + e.getMessage());
+        }
+    }
+}
