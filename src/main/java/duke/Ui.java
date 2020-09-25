@@ -2,14 +2,10 @@ package duke;
 
 import duke.tasks.Task;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Ui {
 
-    public static final String COMMAND_TODO = "todo";
-    public static final String COMMAND_DEADLINE = "deadline";
-    public static final String COMMAND_EVENT = "event";
     public static final String COMMAND_DONE = "done";
     public static final String COMMAND_DELETE = "delete";
     public static final String DIVIDER_TOP = "    ____________________________________________________________";
@@ -36,6 +32,10 @@ public class Ui {
     public static final String MESSAGE_DELETE_TASK = "Noted. I've removed this task:";
     public static final String MESSAGE_FILE_NOT_FOUND = "No existing file detected";
     public static final String MESSAGE_NEW_FILE_CREATED = "New file created";
+    public static final String MESSAGE_INVALID_DATE_ARGS_A = "☹ OOPS!!! The input format for the ";
+    public static final String MESSAGE_INVALID_DATE_ARGS_B = " is not valid.";
+    public static final String MESSAGE_INVALID_DATE_INPUT = "☹ OOPS!!! The format of the date entered is not valid";
+    public static final String MESSAGE_INVALID_FILE_FORMAT = "☹ OOPS!!! The format of the file to be read is not valid.";
 
     public String getUserInput() {
         Scanner in = new Scanner(System.in);
@@ -55,10 +55,18 @@ public class Ui {
         System.out.println(DIVIDER_BOTTOM);
     }
 
-    public void showInvalidDateFormatExceptionMessage(String commandType) {
+    public void showInvalidDateArgsExceptionMessage(String commandType) {
         System.out.println(DIVIDER_TOP);
-        System.out.println(MESSAGE_PREFIX + "☹ OOPS!!! The format for the " + commandType + " is not valid.");
+        System.out.println(MESSAGE_PREFIX + MESSAGE_INVALID_DATE_ARGS_A + commandType + MESSAGE_INVALID_DATE_ARGS_B);
         System.out.println(DIVIDER_BOTTOM);
+    }
+
+    public void showInvalidDateInputExceptionMessage() {
+        System.out.println(MESSAGE_INVALID_DATE_INPUT);
+    }
+
+    public void showInvalidFileFormatExceptionMessage() {
+        System.out.println(MESSAGE_INVALID_FILE_FORMAT);
     }
 
     public void showNullDescriptionExceptionMessage(String commandType) {
@@ -82,19 +90,10 @@ public class Ui {
         System.out.println(DIVIDER_BOTTOM);
     }
 
-    public void showAddTaskMessage(TaskList tasks) {
+    public void showAddTaskMessage(TaskList tasks, Task task) {
         System.out.println(DIVIDER_TOP);
         System.out.println(MESSAGE_PREFIX + MESSAGE_ADD_TASK);
-        System.out.println(TASK_PREFIX + tasks.getTaskList().get(tasks.getTaskList().size()-1).toString());
-        System.out.println(MESSAGE_PREFIX + MESSAGE_TASK_COUNT_A + tasks.getTaskList().size() + MESSAGE_TASK_COUNT_B);
-        System.out.println(DIVIDER_BOTTOM);
-    }
-
-    public void echoTask(TaskList tasks) {
-        System.out.println(TASK_PREFIX + tasks.getTaskList().get(tasks.getTaskList().size()-1).toString());
-    }
-
-    public void showTaskCountMessage(TaskList tasks) {
+        System.out.println(TASK_PREFIX + task.toString());
         System.out.println(MESSAGE_PREFIX + MESSAGE_TASK_COUNT_A + tasks.getTaskList().size() + MESSAGE_TASK_COUNT_B);
         System.out.println(DIVIDER_BOTTOM);
     }
