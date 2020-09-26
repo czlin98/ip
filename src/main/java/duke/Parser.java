@@ -4,12 +4,20 @@ import duke.exceptions.InvalidDateFormatException;
 import duke.exceptions.NullDescriptionException;
 import duke.exceptions.NullIndexException;
 
+/**
+ * Parses user input.
+ */
 public class Parser {
 
     public static final String DELIMITER_COMMAND = " ";
     public static final String DELIMITER_DEADLINE = "/by";
     public static final String DELIMITER_EVENT = "/at";
 
+    /**
+     * Parses the command type of the user input.
+     * @param userInput user input string.
+     * @return the command type string.
+     */
     public String getCommandType(String userInput) {
         String[] commandTypeAndParams;
         String commandType;
@@ -23,6 +31,11 @@ public class Parser {
         return commandType;
     }
 
+    /**
+     * Parses the command arguments of the user input.
+     * @param userInput user input string.
+     * @return the command arguments string.
+     */
     public String getCommandArgs(String userInput) {
         String[] commandTypeAndParams;
         String commandArgs;
@@ -36,6 +49,12 @@ public class Parser {
         return commandArgs;
     }
 
+    /**
+     * Parses the description of the task.
+     * @param commandArgs command arguments string.
+     * @return the description string of the task.
+     * @throws NullDescriptionException if command arguments string is empty.
+     */
     public String getDescription(String commandArgs) throws NullDescriptionException {
         String[] descriptionAndDate;
         String description;
@@ -56,6 +75,12 @@ public class Parser {
         return description;
     }
 
+    /**
+     * Parses the date of the task.
+     * @param commandArgs command arguments string.
+     * @return the date string of the task.
+     * @throws InvalidDateFormatException if command arguments string is not in the valid format.
+     */
     public String getDate(String commandArgs) throws InvalidDateFormatException {
         String[] descriptionAndDate;
         String date = null;
@@ -72,6 +97,12 @@ public class Parser {
         return date;
     }
 
+    /**
+     * Parses the index of the task to be marked as done or deleted.
+     * @param commandArgs command arguments string.
+     * @return the index integer.
+     * @throws NullIndexException if command arguments string is empty.
+     */
     public int getIndex(String commandArgs) throws NullIndexException {
         if (commandArgs == null || commandArgs.trim().length() == 0) {
             throw new NullIndexException();

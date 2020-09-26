@@ -1,5 +1,8 @@
 package duke.tasks;
 
+/**
+ * Represents a task. Contains the description and the done status of the task.
+ */
 public abstract class Task {
     public static final String YES = "Y";
     public static final String NO = "N";

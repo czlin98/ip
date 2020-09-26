@@ -1,5 +1,8 @@
 package duke.tasks;
 
+/**
+ * Represents a todo task. Contains the description and the done status of the todo task.
+ */
 public class Todo extends Task {
 
     public static final String ICON_TODO = "[T]";

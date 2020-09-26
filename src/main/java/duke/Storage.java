@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Storage of the application, handles file reading and writing operations.
+ */
 public class Storage {
 
     public static final String LETTER_TODO = "T";
@@ -25,6 +28,11 @@ public class Storage {
         this.filePath = filePath;
     }
 
+    /**
+     * Reads the contents from an existing file, else creates a new file.
+     * @return the ArrayList of tasks.
+     * @throws FileNotFoundException if the file to be read does not exist.
+     */
     public ArrayList<Task> readFromFile() throws FileNotFoundException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
@@ -68,6 +76,10 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Writes the task list to the existing file.
+     * @param tasks current task list.
+     */
     public void writeToFile(TaskList tasks) {
         try {
             FileWriter filewriter = new FileWriter(filePath);

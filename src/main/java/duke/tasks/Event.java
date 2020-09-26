@@ -1,5 +1,8 @@
 package duke.tasks;
 
+/**
+ * Represents an event. Contains the description, done status, and date of the event.
+ */
 public class Event extends Task {
 
     public static final String ICON_EVENT = "[E]";
