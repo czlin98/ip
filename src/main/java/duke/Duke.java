@@ -1,6 +1,10 @@
 package duke;
 
-import duke.exceptions.*;
+import duke.exceptions.InvalidCommandException;
+import duke.exceptions.InvalidTaskFormatException;
+import duke.exceptions.NullDescriptionException;
+import duke.exceptions.NullIndexException;
+import duke.exceptions.NullStringException;
 import duke.tasks.Task;
 
 import java.io.FileNotFoundException;
@@ -37,7 +41,7 @@ public class Duke {
         try {
             tasks = new TaskList(storage.readFromFile());
         } catch (FileNotFoundException e) {
-            ui.showLoadingError();
+            ui.showFileNotFoundExceptionMessage();
             tasks = new TaskList();
         } catch (DateTimeParseException e) {
             ui.showInvalidFileFormatExceptionMessage();
@@ -57,17 +61,17 @@ public class Duke {
             try {
                 switch (commandType) {
                 case COMMAND_TODO:
-                    Task todoTask = tasks.addTodo(parse.getDescription(commandArgs));
+                    Task todoTask = tasks.addTodo(commandArgs);
                     ui.showAddTaskMessage(tasks, todoTask);
                     storage.writeToFile(tasks);
                     break;
                 case COMMAND_DEADLINE:
-                    Task deadlineTask = tasks.addDeadline(parse.getDescription(commandArgs), parse.getDate(commandArgs));
+                    Task deadlineTask = tasks.addDeadline(parse.getDeadlineDescription(commandArgs), parse.getDeadlineDate(commandArgs));
                     ui.showAddTaskMessage(tasks, deadlineTask);
                     storage.writeToFile(tasks);
                     break;
                 case COMMAND_EVENT:
-                    Task eventTask = tasks.addEvent(parse.getDescription(commandArgs), parse.getDate(commandArgs));
+                    Task eventTask = tasks.addEvent(parse.getEventDescription(commandArgs), parse.getEventDate(commandArgs));
                     ui.showAddTaskMessage(tasks, eventTask);
                     storage.writeToFile(tasks);
                     break;
@@ -98,8 +102,8 @@ public class Duke {
                 }
             } catch (InvalidCommandException e) {
                 ui.showInvalidCommandExceptionMessage();
-            } catch (InvalidDateArgsException e) {
-                ui.showInvalidDateArgsExceptionMessage(commandType);
+            } catch (InvalidTaskFormatException e) {
+                ui.showInvalidTaskFormatExceptionMessage(commandType);
             } catch (NullDescriptionException e) {
                 ui.showNullDescriptionExceptionMessage(commandType);
             } catch (NullIndexException e) {
@@ -107,7 +111,7 @@ public class Duke {
             } catch (NullStringException e)  {
                 ui.showNullStringExceptionMessage();
             } catch (DateTimeParseException e) {
-                ui.showInvalidDateInputExceptionMessage();
+                ui.showInvalidDateFormatExceptionMessage();
             }
         }
     }
