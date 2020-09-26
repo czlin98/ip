@@ -1,18 +1,18 @@
 package duke;
 
+import duke.exceptions.NullStringException;
 import duke.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * UI of the application
  */
 public class Ui {
 
-    public static final String COMMAND_TODO = "todo";
-    public static final String COMMAND_DEADLINE = "deadline";
-    public static final String COMMAND_EVENT = "event";
     public static final String COMMAND_DONE = "done";
     public static final String COMMAND_DELETE = "delete";
     public static final String DIVIDER_TOP = "    ____________________________________________________________";
@@ -39,6 +39,13 @@ public class Ui {
     public static final String MESSAGE_DELETE_TASK = "Noted. I've removed this task:";
     public static final String MESSAGE_FILE_NOT_FOUND = "No existing file detected";
     public static final String MESSAGE_NEW_FILE_CREATED = "New file created";
+    public static final String MESSAGE_INVALID_DATE_ARGS_A = "☹ OOPS!!! The input format for the ";
+    public static final String MESSAGE_INVALID_DATE_ARGS_B = " is not valid.";
+    public static final String MESSAGE_INVALID_DATE_INPUT = "☹ OOPS!!! The format of the date entered is not valid";
+    public static final String MESSAGE_INVALID_FILE_FORMAT = "☹ OOPS!!! The format of the file to be read is not valid.";
+    public static final String MESSAGE_FILTERED_LIST = "Here are the matching tasks in your list:";
+    public static final String MESSAGE_NULL_STRING_A = "☹ OOPS!!! The keyword you want to search for cannot be";
+    public static final String MESSAGE_NULL_STRING_B = "empty.";
 
     /**
      * Prompts for the command and reads the text entered by the user.
@@ -69,16 +76,32 @@ public class Ui {
     }
 
     /**
-     * Shows an InvalidDateFormatException message to the user.
+     * Shows an InvalidDateArgsException message to the user.
+     * @param commandType command type string.
      */
-    public void showInvalidDateFormatExceptionMessage(String commandType) {
+    public void showInvalidDateArgsExceptionMessage(String commandType) {
         System.out.println(DIVIDER_TOP);
-        System.out.println(MESSAGE_PREFIX + "☹ OOPS!!! The format for the " + commandType + " is not valid.");
+        System.out.println(MESSAGE_PREFIX + MESSAGE_INVALID_DATE_ARGS_A + commandType + MESSAGE_INVALID_DATE_ARGS_B);
         System.out.println(DIVIDER_BOTTOM);
     }
 
     /**
+     * Shows an InvalidDateInputException message to the user.
+     */
+    public void showInvalidDateInputExceptionMessage() {
+        System.out.println(MESSAGE_INVALID_DATE_INPUT);
+    }
+
+    /**
+     * Shows an InvalidFileFormatException message to the user.
+     */
+    public void showInvalidFileFormatExceptionMessage() {
+        System.out.println(MESSAGE_INVALID_FILE_FORMAT);
+    }
+
+    /**
      * Shows a NullDescriptionException message to the user.
+     * @param commandType command type string.
      */
     public void showNullDescriptionExceptionMessage(String commandType) {
         System.out.println(DIVIDER_TOP);
@@ -88,6 +111,7 @@ public class Ui {
 
     /**
      * Shows a NullIndexException message to the user.
+     * @param commandType command type string.
      */
     public void showNullIndexExceptionMessage(String commandType) {
         System.out.println(DIVIDER_TOP);
@@ -108,20 +132,12 @@ public class Ui {
      * Shows the task added message to the user, echos the task added back to the user,
      * and shows the current number of tasks to the user.
      * @param tasks current task list.
+     * @param task task that was added.
      */
-    public void showAddTaskMessage(TaskList tasks) {
+    public void showAddTaskMessage(TaskList tasks, Task task) {
         System.out.println(DIVIDER_TOP);
         System.out.println(MESSAGE_PREFIX + MESSAGE_ADD_TASK);
-        System.out.println(TASK_PREFIX + tasks.getTaskList().get(tasks.getTaskList().size()-1).toString());
-        System.out.println(MESSAGE_PREFIX + MESSAGE_TASK_COUNT_A + tasks.getTaskList().size() + MESSAGE_TASK_COUNT_B);
-        System.out.println(DIVIDER_BOTTOM);
-    }
-
-    public void echoTask(TaskList tasks) {
-        System.out.println(TASK_PREFIX + tasks.getTaskList().get(tasks.getTaskList().size()-1).toString());
-    }
-
-    public void showTaskCountMessage(TaskList tasks) {
+        System.out.println(TASK_PREFIX + task.toString());
         System.out.println(MESSAGE_PREFIX + MESSAGE_TASK_COUNT_A + tasks.getTaskList().size() + MESSAGE_TASK_COUNT_B);
         System.out.println(DIVIDER_BOTTOM);
     }
@@ -140,16 +156,15 @@ public class Ui {
     /**
      * Shows a list of tasks to the user, formatted as an indexed list.
      */
-    public void showList(TaskList tasks) {
+    public void showTaskList(ArrayList<Task> tasks) {
         System.out.println(DIVIDER_TOP);
-        if (tasks.getTaskList().size() == 0) {
+        if (tasks.size() == 0) {
             System.out.println(MESSAGE_PREFIX + MESSAGE_LIST_NO_TASKS);
         }
         else {
             System.out.println(MESSAGE_PREFIX + MESSAGE_LIST);
-            for (Task task : tasks.getTaskList()) {
-                System.out.println(MESSAGE_PREFIX + (tasks.getTaskList().indexOf(task)+1)  + PERIOD + task.toString());
-            }
+            tasks.stream()
+                    .forEach((t) -> System.out.println(MESSAGE_PREFIX + (tasks.indexOf(t) + 1) + PERIOD + t.toString()));
         }
         System.out.println(DIVIDER_BOTTOM);
     }
@@ -183,5 +198,36 @@ public class Ui {
         System.out.println(DIVIDER_TOP);
         System.out.println(MESSAGE_PREFIX + MESSAGE_FILE_NOT_FOUND);
         System.out.println(MESSAGE_PREFIX + MESSAGE_NEW_FILE_CREATED);
+    }
+
+    /**
+     * Shows a list of tasks filtered by the filter string to the user.
+     * @param tasks task list.
+     * @param filterString filter string.
+     * @throws NullStringException if the filter string is empty.
+     */
+    public void showFilteredTaskList(ArrayList<Task> tasks, String filterString) throws NullStringException {
+        if (filterString == null || filterString.trim().length() == 0) {
+            throw new NullStringException();
+        }
+        System.out.println(DIVIDER_TOP);
+        System.out.println(MESSAGE_PREFIX + MESSAGE_FILTERED_LIST);
+        ArrayList<Task> filteredTaskList = (ArrayList<Task>) tasks.stream()
+                .filter((s) -> s.getDescription().contains(filterString))
+                .collect(toList());
+        for (Task t : filteredTaskList) {
+            System.out.println(MESSAGE_PREFIX + (filteredTaskList.indexOf(t) + 1) + PERIOD + t.toString());
+        }
+        System.out.println(DIVIDER_BOTTOM);
+    }
+
+    /**
+     * Shows a NullStringException message to the user.
+     */
+    public void showNullStringExceptionMessage() {
+        System.out.println(DIVIDER_TOP);
+        System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_STRING_A);
+        System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_STRING_B);
+        System.out.println(DIVIDER_BOTTOM);
     }
 }

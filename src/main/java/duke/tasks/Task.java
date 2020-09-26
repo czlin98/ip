@@ -34,4 +34,8 @@ public abstract class Task {
     public String toSave() {
         return (isDone ? TRUE : FALSE) + DELIMITER + description;
     }
+
+    public String getDescription() {
+        return description;
+    }
 }

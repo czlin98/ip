@@ -5,6 +5,7 @@ import duke.tasks.Event;
 import duke.tasks.Task;
 import duke.tasks.Todo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -29,30 +30,36 @@ public class TaskList {
     /**
      * Adds new todo task to the task list.
      * @param todoDescription description string of the todo task.
+     * @return the todo task added.
      */
-    public void addTodo(String todoDescription) {
+    public Task addTodo(String todoDescription) {
         Todo todoTask = new Todo(todoDescription);
         taskList.add(todoTask);
+        return todoTask;
     }
 
     /**
      * Adds new deadline task to the task list.
      * @param deadlineDescription description string of the deadline task.
-     * @param deadlineDate date string of the deadline task.
+     * @param deadlineDate formatted date object of the deadline task.
+     * @return the deadline task added.
      */
-    public void addDeadline(String deadlineDescription, String deadlineDate) {
+    public Task addDeadline(String deadlineDescription, LocalDate deadlineDate) {
         Deadline deadlineTask = new Deadline(deadlineDescription, deadlineDate);
         taskList.add(deadlineTask);
+        return deadlineTask;
     }
 
     /**
-     * Adds new event task to the task list.
+     * Adds new evebt task to the task list.
      * @param eventDescription description string of the event task.
-     * @param eventDate date string of the event task.
+     * @param eventDate formatted date object of the event task.
+     * @return the event task added.
      */
-    public void addEvent(String eventDescription, String eventDate) {
+    public Task addEvent(String eventDescription, LocalDate eventDate) {
         Event eventTask = new Event(eventDescription, eventDate);
         taskList.add(eventTask);
+        return eventTask;
     }
 
     /**
