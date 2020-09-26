@@ -6,6 +6,8 @@ import duke.tasks.Task;
 import duke.tasks.Todo;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -44,8 +46,8 @@ public class TaskList {
      * @param deadlineDate formatted date object of the deadline task.
      * @return the deadline task added.
      */
-    public Task addDeadline(String deadlineDescription, LocalDate deadlineDate) {
-        Deadline deadlineTask = new Deadline(deadlineDescription, deadlineDate);
+    public Task addDeadline(String deadlineDescription, LocalDate deadlineDate, LocalTime deadlineTime) {
+        Deadline deadlineTask = new Deadline(deadlineDescription, deadlineDate, deadlineTime);
         taskList.add(deadlineTask);
         return deadlineTask;
     }
@@ -56,8 +58,8 @@ public class TaskList {
      * @param eventDate formatted date object of the event task.
      * @return the event task added.
      */
-    public Task addEvent(String eventDescription, LocalDate eventDate) {
-        Event eventTask = new Event(eventDescription, eventDate);
+    public Task addEvent(String eventDescription, LocalDate eventDate, LocalTime eventTime) {
+        Event eventTask = new Event(eventDescription, eventDate, eventTime);
         taskList.add(eventTask);
         return eventTask;
     }

@@ -16,6 +16,7 @@ import java.time.format.DateTimeParseException;
  */
 public class Duke {
 
+    public static final String COMMAND_HELP = "help";
     public static final String COMMAND_TODO = "todo";
     public static final String COMMAND_DEADLINE = "deadline";
     public static final String COMMAND_EVENT = "event";
@@ -43,8 +44,12 @@ public class Duke {
         } catch (FileNotFoundException e) {
             ui.showFileNotFoundExceptionMessage();
             tasks = new TaskList();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            ui.showInvalidFileFormatExceptionMessage();
+            System.exit(0);
         } catch (DateTimeParseException e) {
             ui.showInvalidFileFormatExceptionMessage();
+            System.exit(0);
         }
     }
 
@@ -60,18 +65,21 @@ public class Duke {
             String commandArgs = parse.getCommandArgs(userInput);
             try {
                 switch (commandType) {
+                case COMMAND_HELP:
+                    ui.showHelpMessage();
+                    break;
                 case COMMAND_TODO:
                     Task todoTask = tasks.addTodo(commandArgs);
                     ui.showAddTaskMessage(tasks, todoTask);
                     storage.writeToFile(tasks);
                     break;
                 case COMMAND_DEADLINE:
-                    Task deadlineTask = tasks.addDeadline(parse.getDeadlineDescription(commandArgs), parse.getDeadlineDate(commandArgs));
+                    Task deadlineTask = tasks.addDeadline(parse.getDeadlineDescription(commandArgs), parse.getDeadlineDate(commandArgs), parse.getDeadlineTime(commandArgs));
                     ui.showAddTaskMessage(tasks, deadlineTask);
                     storage.writeToFile(tasks);
                     break;
                 case COMMAND_EVENT:
-                    Task eventTask = tasks.addEvent(parse.getEventDescription(commandArgs), parse.getEventDate(commandArgs));
+                    Task eventTask = tasks.addEvent(parse.getEventDescription(commandArgs), parse.getEventDate(commandArgs), parse.getEventTime(commandArgs));
                     ui.showAddTaskMessage(tasks, eventTask);
                     storage.writeToFile(tasks);
                     break;
@@ -81,13 +89,13 @@ public class Duke {
                     ui.showTaskDoneMessage(taskToBeMarkedAsDone);
                     storage.writeToFile(tasks);
                     break;
-                case COMMAND_LIST:
-                    ui.showTaskList(tasks.getTaskList());
-                    break;
                 case COMMAND_DELETE:
                     Task taskToBeDeleted = tasks.deleteTask(parse.getIndex(commandArgs));
                     ui.showTaskDeletedMessage(tasks, taskToBeDeleted);
                     storage.writeToFile(tasks);
+                    break;
+                case COMMAND_LIST:
+                    ui.showTaskList(tasks.getTaskList());
                     break;
                 case COMMAND_FIND:
                     ui.showFilteredTaskList(tasks.getTaskList(), commandArgs);

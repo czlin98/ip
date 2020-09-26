@@ -5,6 +5,7 @@ import duke.exceptions.NullDescriptionException;
 import duke.exceptions.NullIndexException;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -16,6 +17,8 @@ public class Parser {
     public static final String COMMAND_WORD_DELIMITER = " ";
     public static final String DEADLINE_DELIMITER = "/by";
     public static final String EVENT_DELIMITER = "/at";
+    public static final String INPUT_DATE_FORMAT = "d/MM/yyyy";
+    public static final String INPUT_TIME_FORMAT = "HHmm";
 
     /**
      * Parses the command type of the user input.
@@ -84,8 +87,15 @@ public class Parser {
      * @throws DateTimeParseException if the date string to be parsed is not in the correct format.
      */
     public LocalDate getDeadlineDate(String commandArgs) throws NullDescriptionException, InvalidTaskFormatException, DateTimeParseException {
+        LocalDate formattedDate;
+        String[] dateAndTime;
         String date = getDescriptionAndDate(commandArgs, DEADLINE_DELIMITER)[1].trim();
-        return LocalDate.parse(date, DateTimeFormatter.ofPattern("d/MM/yyyy"));
+        if (date.contains(" ")) {
+            dateAndTime = date.split(" ", 2);
+            date = dateAndTime[0];
+        }
+        formattedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern(INPUT_DATE_FORMAT));
+        return formattedDate;
     }
 
     /**
@@ -97,8 +107,51 @@ public class Parser {
      * @throws DateTimeParseException if the date string to be parsed is not in the correct format.
      */
     public LocalDate getEventDate(String commandArgs) throws NullDescriptionException, InvalidTaskFormatException, DateTimeParseException {
+        LocalDate formattedDate;
+        String[] dateAndTime;
         String date = getDescriptionAndDate(commandArgs, EVENT_DELIMITER)[1].trim();
-        return LocalDate.parse(date, DateTimeFormatter.ofPattern("d/MM/yyyy"));
+        if (date.contains(" ")) {
+            dateAndTime = date.split(" ", 2);
+            date = dateAndTime[0];
+        }
+        formattedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern(INPUT_DATE_FORMAT));
+        return formattedDate;
+    }
+
+    /**
+     * Parses the time of the deadline task.
+     * @param commandArgs command arguments string.
+     * @return the formatted time as a LocalTime object.
+     * @throws NullDescriptionException if command arguments string or description string is omitted.
+     * @throws InvalidTaskFormatException if the deadline delimiter "/by" or the date is omitted.
+     * @throws DateTimeParseException if the date string or time string to be parsed is not in the correct format.
+     */
+    public LocalTime getDeadlineTime(String commandArgs) throws NullDescriptionException, InvalidTaskFormatException, DateTimeParseException{
+        LocalTime formattedTime = LocalTime.MAX;
+        String date = getDescriptionAndDate(commandArgs, DEADLINE_DELIMITER)[1].trim();
+        String time = getTime(date);
+        if (!isNullAndEmpty(time)) {
+            formattedTime = LocalTime.parse(time.trim(), DateTimeFormatter.ofPattern(INPUT_TIME_FORMAT));
+        }
+        return formattedTime;
+    }
+
+    /**
+     * Parses the time of the event task.
+     * @param commandArgs command arguments string.
+     * @return the formatted time as a LocalTime object.
+     * @throws NullDescriptionException if command arguments string or description string is omitted.
+     * @throws InvalidTaskFormatException if the event delimiter "/at" or the date is omitted.
+     * @throws DateTimeParseException if the date string or time string to be parsed is not in the correct format.
+     */
+    public LocalTime getEventTime(String commandArgs) throws NullDescriptionException, InvalidTaskFormatException, DateTimeParseException{
+        LocalTime formattedTime = LocalTime.MAX;
+        String date = getDescriptionAndDate(commandArgs, EVENT_DELIMITER)[1].trim();
+        String time = getTime(date);
+        if (!isNullAndEmpty(time)) {
+            formattedTime = LocalTime.parse(time.trim(), DateTimeFormatter.ofPattern(INPUT_TIME_FORMAT));
+        }
+        return formattedTime;
     }
 
     /**
@@ -124,6 +177,16 @@ public class Parser {
             throw new InvalidTaskFormatException();
         }
         return descriptionAndDate;
+    }
+
+    public String getTime(String date) {
+        String[] dateAndTime;
+        String time = null;
+        if (date.contains(" ")) {
+            dateAndTime = date.split(" ", 2);
+            time = dateAndTime[1];
+        }
+        return time;
     }
 
     /**
