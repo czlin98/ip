@@ -8,6 +8,9 @@ import duke.tasks.Todo;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Task list of the application.
+ */
 public class TaskList {
 
     public ArrayList<Task> taskList;
@@ -24,30 +27,57 @@ public class TaskList {
         return taskList;
     }
 
+    /**
+     * Adds new todo task to the task list.
+     * @param todoDescription description string of the todo task.
+     * @return the todo task added.
+     */
     public Task addTodo(String todoDescription) {
         Todo todoTask = new Todo(todoDescription);
         taskList.add(todoTask);
         return todoTask;
     }
 
+    /**
+     * Adds new deadline task to the task list.
+     * @param deadlineDescription description string of the deadline task.
+     * @param deadlineDate formatted date object of the deadline task.
+     * @return the deadline task added.
+     */
     public Task addDeadline(String deadlineDescription, LocalDate deadlineDate) {
         Deadline deadlineTask = new Deadline(deadlineDescription, deadlineDate);
         taskList.add(deadlineTask);
         return deadlineTask;
     }
 
+    /**
+     * Adds new evebt task to the task list.
+     * @param eventDescription description string of the event task.
+     * @param eventDate formatted date object of the event task.
+     * @return the event task added.
+     */
     public Task addEvent(String eventDescription, LocalDate eventDate) {
         Event eventTask = new Event(eventDescription, eventDate);
         taskList.add(eventTask);
         return eventTask;
     }
 
+    /**
+     * Marks a task as done.
+     * @param index index integer of the task in the list.
+     * @return the task marked as done.
+     */
     public Task markTaskAsDone(int index) {
         Task task = taskList.get(index);
         task.markAsDone();
         return task;
     }
 
+    /**
+     * Deletes a task from the task list.
+     * @param index index integer of the task to be deleted.
+     * @return the task that was deleted.
+     */
     public Task deleteTask(int index) {
         Task task = taskList.get(index);
         taskList.remove(task);

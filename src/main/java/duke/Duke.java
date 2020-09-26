@@ -6,6 +6,10 @@ import duke.tasks.Task;
 import java.io.FileNotFoundException;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Entry point of the Duke application.
+ * Initializes the application and starts the interaction with the user.
+ */
 public class Duke {
 
     public static final String COMMAND_TODO = "todo";
@@ -22,6 +26,9 @@ public class Duke {
     private Parser parse;
     private Storage storage;
 
+    /**
+     * Sets up the required objects, and reads any existing file else creates a new file.
+     */
     public Duke(String filePath) {
         ui = new Ui();
         tasks = new TaskList();
@@ -37,6 +44,9 @@ public class Duke {
         }
     }
 
+    /**
+     * Reads the user command and executes it, until the user issues the exit command.
+     */
     public void run() {
         ui.showWelcomeMessage();
         boolean isExit = false;

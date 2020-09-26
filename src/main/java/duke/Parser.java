@@ -7,12 +7,20 @@ import duke.exceptions.NullIndexException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Parses user input.
+ */
 public class Parser {
 
     public static final String COMMAND_WORD_DELIMITER = " ";
     public static final String DEADLINE_DELIMITER = "/by";
     public static final String EVENT_DELIMITER = "/at";
 
+    /**
+     * Parses the command type of the user input.
+     * @param userInput user input string.
+     * @return the command type string.
+     */
     public String getCommandType(String userInput) {
         String[] commandTypeAndParams;
         String commandType;
@@ -26,6 +34,11 @@ public class Parser {
         return commandType;
     }
 
+    /**
+     * Parses the command arguments of the user input.
+     * @param userInput user input string.
+     * @return the command arguments string.
+     */
     public String getCommandArgs(String userInput) {
         String[] commandTypeAndParams;
         String commandArgs;
@@ -39,6 +52,12 @@ public class Parser {
         return commandArgs;
     }
 
+    /**
+     * Parses the description of the task.
+     * @param commandArgs command arguments string.
+     * @return the description string of the task.
+     * @throws NullDescriptionException if command arguments string is empty.
+     */
     public String getDescription(String commandArgs) throws NullDescriptionException {
         String[] descriptionAndDate;
         String description;
@@ -59,6 +78,12 @@ public class Parser {
         return description;
     }
 
+    /**
+     * Parses the date of the task.
+     * @param commandArgs command arguments string.
+     * @return the formatted date object of the task.
+     * @throws InvalidDateArgsException if date arguments string is not in the valid format.
+     */
     public LocalDate getDate(String commandArgs) throws InvalidDateArgsException {
         String[] descriptionAndDate;
         String date = null;
@@ -76,6 +101,12 @@ public class Parser {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("d/MM/yyyy"));
     }
 
+    /**
+     * Parses the index of the task to be marked as done or deleted.
+     * @param commandArgs command arguments string.
+     * @return the index integer.
+     * @throws NullIndexException if command arguments string is empty.
+     */
     public int getIndex(String commandArgs) throws NullIndexException {
         if (commandArgs == null || commandArgs.trim().length() == 0) {
             throw new NullIndexException();
