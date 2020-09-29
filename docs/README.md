@@ -130,13 +130,14 @@ There is no need to save manually.
 **A:** Install the app in the other computer and copy into the same folder the `duke.txt` file that contains the data of your previous Duke app.
 <br/><br/>
 ## Command summary
-**Action** | **Format, Examples**
----------- | --------------------
-**Add deadline** | `deadline TASK /by DATE [TIME]`<br/>e.g. `event project meeting /at 2/10/2020 1400`, `deadline return book /by 9/10/2020 1800`
-**Add event** | `event TASK /at DATE [TIME]`<br/>e.g. `event project meeting /at 2/10/2020 1400`, `event John Doe's birthday /at 1/01/2021`
-**Add todo** | `todo TASK`<br/>e.g. `todo borrow book`
-**Delete** | `delete INDEX`<br/>e.g. `delete 2`
-**Done** | `done INDEX`<br/>e.g. `done 1`
-**Find** | `find KEYWORD`<br/>e.g. `find book`
-**List** | `list`
-**Help** | `help`
+
+| **Action** | **Format, Examples** |
+| ---------- | -------------------- |
+| **Add deadline** | `deadline TASK /by DATE [TIME]`<br/>e.g. `event project meeting /at 2/10/2020 1400`, `deadline return book /by 9/10/2020 1800` |
+| **Add event** | `event TASK /at DATE [TIME]`<br/>e.g. `event project meeting /at 2/10/2020 1400`, `event John Doe's birthday /at 1/01/2021` |
+| **Add todo** | `todo TASK`<br/>e.g. `todo borrow book` |
+| **Delete** | `delete INDEX`<br/>e.g. `delete 2` |
+| **Done** | `done INDEX`<br/>e.g. `done 1` |
+| **Find** | `find KEYWORD`<br/>e.g. `find book` |
+| **List** | `list` |
+| **Help** | `help` |
