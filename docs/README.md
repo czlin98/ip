@@ -30,14 +30,14 @@ Duke is a **desktop app for managing tasks, optimized for use via a Command Line
 6. Refers to the Features below for details of each command.
 <br/><br/>
 ## Features
-```
-:information_source: **Notes about the command format:**:
-- Words in UPPER_CASE are the parameters to be supplied by the user.
-  e.g. in todo TASK, TASK is a parameter which can be used as add borrow book.
-- Items in square brackets are optional.
-  e.g. /by DATE [TIME] can be used as /by 2/10/2020 1800 or as /by 2/10/2020.
-- Parameters have to be in order.
-```
+
+>Notes about the command format:
+>- Words in `UPPER_CASE` are the parameters to be supplied by the user.
+>  e.g. in `todo TASK`, `TASK` is a parameter which can be used as `add borrow book`.
+>- Items in square brackets are optional.
+>  e.g. `/by DATE [TIME]` can be used as `/by 2/10/2020 1800` or as `/by 2/10/2020`.
+>- Parameters have to be in order.
+
 
 ### Viewing help: `help`
 Shows a list of available commands.
