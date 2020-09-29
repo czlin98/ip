@@ -20,7 +20,6 @@ Duke is a **desktop app for managing tasks, optimized for use via a Command Line
 2. Download the latest `ip.jar` from [here]().
 3. Copy the file to the folder you want to use as the *home folder* for your Duke app.
 4. Double-click the file to start the app. The UI similar to the below should appear in a few seconds.
-
 5. Type the command in the command box and press Enter to execute it. e.g. typing `help` and pressing Enter will show the list of available commands.\
    Some example commands you can try:
    - `event project meeting /at 2/10/2020 1400` : Adds an event task with date Oct 2 2020 and time 2:00 pm to the task list.
@@ -29,7 +28,6 @@ Duke is a **desktop app for managing tasks, optimized for use via a Command Line
    - `delete 1` : Deletes the 1st task shown in the current list.
    - `bye` : Exits the app.
 6. Refers to the Features below for details of each command.
-
 <br/>
 <br/>
 ## Features
