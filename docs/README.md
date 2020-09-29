@@ -79,7 +79,7 @@ Format: `list`
 Marks the specified task as done in the task list.
 
 Format: `done INDEX`
-- Marks the task at the specified `INDEX` as done
+- Marks the task at the specified `INDEX` as done.
 - The index refers to the index number shown in the task list.
 - The index **must be a positive integer** 1, 2, 3...
 
@@ -112,15 +112,14 @@ Examples:
 - `find bor` returns `borrow book`
 <br/><br/>
 ### Exiting the program: `exit`
-Exits the program:
+Exits the program.
 
 Format: `exit`
 <br/><br/>
 ### Saving the data
 Duke data are saved in the hard disk automatically after any command that changes the data.\
 There is no need to save manually.
-<br/>
-<br/>
+<br/><br/>
 ## FAQ
 **Q:** How do I transfer my data to another Computer?\
 **A:** Install the app in the other computer and copy into the same folder the `duke.txt` file that contains the data of your previous Duke app.
