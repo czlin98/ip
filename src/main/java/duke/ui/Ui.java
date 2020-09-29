@@ -7,6 +7,7 @@ import duke.tasks.Task;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static duke.common.Messages.MESSAGE_LOGO;
 import static duke.common.Messages.MESSAGE_GREET_A;
 import static duke.common.Messages.MESSAGE_GREET_B;
 import static duke.common.Messages.MESSAGE_COMMAND_LIST;
@@ -80,6 +81,8 @@ public class Ui {
      * Generates and prints the welcome message upon the start of the application.
      */
     public void showWelcomeMessage() {
+        System.out.println(DIVIDER_TOP);
+        System.out.println(MESSAGE_LOGO);
         System.out.println(DIVIDER_TOP);
         System.out.println(MESSAGE_PREFIX + MESSAGE_GREET_A);
         System.out.println(MESSAGE_PREFIX + MESSAGE_GREET_B);
