@@ -1,4 +1,4 @@
-package duke;
+package duke.parser;
 
 import duke.exceptions.InvalidTaskFormatException;
 import duke.exceptions.NullDescriptionException;

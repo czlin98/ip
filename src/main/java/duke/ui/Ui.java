@@ -1,5 +1,6 @@
-package duke;
+package duke.ui;
 
+import duke.data.TaskList;
 import duke.exceptions.NullStringException;
 import duke.tasks.Task;
 
