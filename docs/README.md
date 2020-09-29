@@ -19,15 +19,18 @@ Duke is a **desktop app for managing tasks, optimized for use via a Command Line
 1. Ensure you have Java `11` or above installed in your Computer.
 2. Download the latest `ip.jar` from [here]().
 3. Copy the file to the folder you want to use as the *home folder* for your Duke app.
-4. Double-click the file to start the app. The UI similar to the below should appear in a few seconds.
-5. Type the command in the command box and press Enter to execute it. e.g. typing `help` and pressing Enter will show the list of available commands.\
+4. Open a command window in that folder.
+5. Run the command `java -jar ip.jar`. The UI similar to the below should appear.
+
+![welcome](https://github.com/czlin98/ip/blob/master/docs/duke_welcome.png)
+6. Type the command in the command box and press Enter to execute it. e.g. typing `help` and pressing Enter will show the list of available commands.\
    Some example commands you can try:
    - `event project meeting /at 2/10/2020 1400` : Adds an event task with date Oct 2 2020 and time 2:00 pm to the task list.
    - `list` : Lists all tasks.
    - `done 1` : Marks the 1st task shown in the current list.
    - `delete 1` : Deletes the 1st task shown in the current list.
    - `bye` : Exits the app.
-6. Refers to the Features below for details of each command.
+7. Refers to the Features below for details of each command.
 <br/><br/>
 ## Features
 
@@ -110,6 +113,8 @@ Format: `find KEYWORD`
 Examples:
 - `find book` returns `borrow book` and `return book`
 - `find bor` returns `borrow book`
+
+![find](https://github.com/czlin98/ip/blob/master/docs/duke_find.png)
 <br/><br/>
 ### Exiting the program: `exit`
 Exits the program.
