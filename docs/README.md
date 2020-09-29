@@ -11,10 +11,10 @@ Duke is a **desktop app for managing tasks, optimized for use via a Command Line
   - [Deleting a task: `delete`](#deleting-a-task-delete)
   - [Locating tasks by name: `find`](#locating-tasks-by-name-find)
   - [Exiting the program: `bye`](#exiting-the-program-exit)
+  - [Saving the data](#saving-the-data)
 - [FAQ](#faq)
 - [Command summary](#command-summary)
-<br/>
-<br/>
+<br/><br/>
 ## Quick Start
 1. Ensure you have Java `11` or above installed in your Computer.
 2. Download the latest `ip.jar` from [here]().
@@ -28,8 +28,7 @@ Duke is a **desktop app for managing tasks, optimized for use via a Command Line
    - `delete 1` : Deletes the 1st task shown in the current list.
    - `bye` : Exits the app.
 6. Refers to the Features below for details of each command.
-<br/>
-<br/>
+<br/><br/>
 ## Features
 ```
 :information_source: **Notes about the command format:**:
@@ -44,8 +43,7 @@ Duke is a **desktop app for managing tasks, optimized for use via a Command Line
 Shows a list of available commands.
 
 Format: `help`
-<br/>
-<br/>
+<br/><br/>
 ### Adding a todo task: `todo`
 Adds a todo task to the task list.
 
@@ -53,8 +51,7 @@ Format: `todo TASK`
 
 Example:
 - `todo borrow book`
-<br/>
-<br/>
+<br/><br/>
 ### Adding a deadline task: `deadline`
 Adds a deadline task to the task list.
 
@@ -63,8 +60,7 @@ Format: `deadline TASK /by DATE [TIME]`
 Examples:
 - `deadline borrow book /by 2/10/2020`
 - `deadline return book /by 9/10/2020 1800`
-<br/>
-<br/>
+<br/><br/>
 ### Adding an event task: `event`
 Adds an event task to the task list.
 
@@ -73,14 +69,12 @@ Format: `event TASK /at DATE [TIME]`
 Examples:
 - `event project meeting /at 2/10/2020 1400`
 - `event John Doe's birthday /at 1/01/2021`
-<br/>
-<br/>
+<br/><br/>
 ### Listing all tasks: `list`
 Shows a list of all tasks in the task list.
 
 Format: `list`
-<br/>
-<br/>
+<br/><br/>
 ### Marking a task as done: `done`
 Marks the specified task as done in the task list.
 
@@ -91,8 +85,7 @@ Format: `done INDEX`
 
 Example:
 - `list` followed by `delete 1` marks the first task in the task list as done.
-<br/>
-<br/>
+<br/><br/>
 ### Deleting a task: `delete`
 Deletes the specified task from the task list.
 
@@ -103,8 +96,7 @@ Format: `delete INDEX`
 
 Example:
 - `list` followed by `delete 2` deletes the second task in the task list.
-<br/>
-<br/>
+<br/><br/>
 ### Locating tasks by name: `find`
 Finds tasks whose descriptions contain any of the given keywords.
 
@@ -118,15 +110,13 @@ Format: `find KEYWORD`
 Examples:
 - `find book` returns `borrow book` and `return book`
 - `find bor` returns `borrow book`
-<br/>
-<br/>
+<br/><br/>
 ### Exiting the program: `exit`
 Exits the program:
 
 Format: `exit`
-<br/>
-<br/>
-### Saving the date
+<br/><br/>
+### Saving the data
 Duke data are saved in the hard disk automatically after any command that changes the data.\
 There is no need to save manually.
 <br/>
@@ -134,8 +124,7 @@ There is no need to save manually.
 ## FAQ
 **Q:** How do I transfer my data to another Computer?\
 **A:** Install the app in the other computer and copy into the same folder the `duke.txt` file that contains the data of your previous Duke app.
-<br/>
-<br/>
+<br/><br/>
 ## Command summary
 **Action** | **Format, Examples**
 ---------- | --------------------
