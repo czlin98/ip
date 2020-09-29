@@ -29,7 +29,7 @@ public class Duke {
     public static final String COMMAND_DELETE = "delete";
     public static final String COMMAND_FIND = "find";
     public static final String COMMAND_BYE = "bye";
-    public static final String FILE_PATH = "data/duke.txt";
+    public static final String FILE_PATH = "duke.txt";
     private Ui ui;
     private TaskList tasks;
     private Parser parse;
@@ -99,10 +99,10 @@ public class Duke {
                     storage.writeToFile(tasks);
                     break;
                 case COMMAND_LIST:
-                    ui.showTaskList(tasks.getTaskList());
+                    ui.showTaskList(tasks);
                     break;
                 case COMMAND_FIND:
-                    ui.showFilteredTaskList(tasks.getTaskList(), commandArgs);
+                    ui.showFilteredTaskList(tasks, commandArgs);
                     break;
                 case COMMAND_BYE:
                     isExit = true;
@@ -120,6 +120,8 @@ public class Duke {
                 ui.showNullDescriptionExceptionMessage(commandType);
             } catch (NullIndexException e) {
                 ui.showNullIndexExceptionMessage(commandType);
+            } catch (IndexOutOfBoundsException e) {
+                ui.showIndexOutOfBoundsExceptionMessage(commandType);
             } catch (NullStringException e)  {
                 ui.showNullStringExceptionMessage();
             } catch (DateTimeParseException e) {

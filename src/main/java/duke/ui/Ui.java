@@ -37,10 +37,15 @@ import static duke.common.Messages.MESSAGE_INVALID_FILE_FORMAT_A;
 import static duke.common.Messages.MESSAGE_INVALID_FILE_FORMAT_B;
 import static duke.common.Messages.MESSAGE_NULL_DESCRIPTION_A;
 import static duke.common.Messages.MESSAGE_NULL_DESCRIPTION_B;
-import static duke.common.Messages.MESSAGE_NULL_INDEX_DONE_A;
-import static duke.common.Messages.MESSAGE_NULL_INDEX_DONE_B;
-import static duke.common.Messages.MESSAGE_NULL_INDEX_DELETE_A;
-import static duke.common.Messages.MESSAGE_NULL_INDEX_DELETE_B;
+import static duke.common.Messages.MESSAGE_DONE_ERROR;
+import static duke.common.Messages.MESSAGE_NULL_INDEX_DONE;
+import static duke.common.Messages.MESSAGE_DELETE_ERROR_A;
+import static duke.common.Messages.MESSAGE_DELETE_ERROR_B;
+import static duke.common.Messages.MESSAGE_NULL_INDEX_DELETE;
+import static duke.common.Messages.MESSAGE_NULL_INDEX;
+import static duke.common.Messages.MESSAGE_INDEX_OUT_OF_BOUNDS_DONE;
+import static duke.common.Messages.MESSAGE_INDEX_OUT_OF_BOUNDS_DELETE;
+import static duke.common.Messages.MESSAGE_INDEX_OUT_OF_BOUNDS;
 import static duke.common.Messages.MESSAGE_NULL_FILTER_STRING_A;
 import static duke.common.Messages.MESSAGE_NULL_FILTER_STRING_B;
 import static duke.common.Messages.MESSAGE_FILE_NOT_FOUND;
@@ -141,14 +146,14 @@ public class Ui {
     /**
      * Shows a list of tasks to the user, formatted as an indexed list.
      */
-    public void showTaskList(ArrayList<Task> tasks) {
+    public void showTaskList(TaskList tasks) {
         System.out.println(DIVIDER_TOP);
         if (tasks.size() == 0) {
             System.out.println(MESSAGE_PREFIX + MESSAGE_LIST_NO_TASKS);
         }
         else {
             System.out.println(MESSAGE_PREFIX + MESSAGE_LIST);
-            tasks.stream()
+            tasks.getTaskList().stream()
                     .forEach((t) -> System.out.println(MESSAGE_PREFIX + (tasks.indexOf(t) + 1) + PERIOD + t.toString()));
         }
         System.out.println(DIVIDER_BOTTOM);
@@ -160,13 +165,13 @@ public class Ui {
      * @param filterString filter string.
      * @throws NullStringException if the filter string is empty.
      */
-    public void showFilteredTaskList(ArrayList<Task> tasks, String filterString) throws NullStringException {
+    public void showFilteredTaskList(TaskList tasks, String filterString) throws NullStringException {
         if (filterString == null || filterString.trim().length() == 0) {
             throw new NullStringException();
         }
         System.out.println(DIVIDER_TOP);
-        ArrayList<Task> filteredTaskList = (ArrayList<Task>) tasks.stream()
-                .filter((s) -> s.getDescription().contains(filterString))
+        ArrayList<Task> filteredTaskList = (ArrayList<Task>) tasks.getTaskList().stream()
+                .filter((s) -> s.getDescription().toLowerCase().contains(filterString.trim().toLowerCase()))
                 .collect(toList());
         if (filteredTaskList.size() == 0) {
             System.out.println(MESSAGE_PREFIX + MESSAGE_FILTERED_LIST_NO_TASKS);
@@ -244,13 +249,32 @@ public class Ui {
         System.out.println(DIVIDER_TOP);
         switch (commandType) {
         case COMMAND_DONE:
-            System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_INDEX_DONE_A);
-            System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_INDEX_DONE_B);
+            System.out.println(MESSAGE_PREFIX + MESSAGE_DONE_ERROR);
+            System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_INDEX_DONE);
             break;
         case COMMAND_DELETE:
-            System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_INDEX_DELETE_A);
-            System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_INDEX_DELETE_B);
+            System.out.println(MESSAGE_PREFIX + MESSAGE_DELETE_ERROR_A);
+            System.out.println(MESSAGE_PREFIX + MESSAGE_NULL_INDEX_DELETE);
             break;
+        default:
+            System.out.println(MESSAGE_NULL_INDEX);
+        }
+        System.out.println(DIVIDER_BOTTOM);
+    }
+
+    public void showIndexOutOfBoundsExceptionMessage(String commandType) {
+        System.out.println(DIVIDER_TOP);
+        switch (commandType) {
+        case COMMAND_DONE:
+            System.out.println(MESSAGE_PREFIX + MESSAGE_DONE_ERROR);
+            System.out.println(MESSAGE_PREFIX + MESSAGE_INDEX_OUT_OF_BOUNDS_DONE);
+            break;
+        case COMMAND_DELETE:
+            System.out.println(MESSAGE_PREFIX + MESSAGE_DELETE_ERROR_B);
+            System.out.println(MESSAGE_PREFIX + MESSAGE_INDEX_OUT_OF_BOUNDS_DELETE);
+            break;
+        default:
+            System.out.println(MESSAGE_INDEX_OUT_OF_BOUNDS);
         }
         System.out.println(DIVIDER_BOTTOM);
     }

@@ -29,6 +29,14 @@ public class TaskList {
         return taskList;
     }
 
+    public int indexOf(Task task) {
+        return taskList.indexOf(task);
+    }
+
+    public int size() {
+        return taskList.size();
+    }
+
     /**
      * Adds new todo task to the task list.
      * @param todoDescription description string of the todo task.
@@ -69,7 +77,7 @@ public class TaskList {
      * @param index index integer of the task in the list.
      * @return the task marked as done.
      */
-    public Task markTaskAsDone(int index) {
+    public Task markTaskAsDone(int index) throws IndexOutOfBoundsException {
         Task task = taskList.get(index);
         task.markAsDone();
         return task;
