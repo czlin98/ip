@@ -116,10 +116,10 @@ Examples:
 
 ![find](https://raw.githubusercontent.com/czlin98/ip/master/docs/duke_find.png)
 <br/><br/>
-### Exiting the program: `exit`
+### Exiting the program: `bye`
 Exits the program.
 
-Format: `exit`
+Format: `bye`
 <br/><br/>
 ### Saving the data
 Duke data are saved in the hard disk automatically after any command that changes the data.\
